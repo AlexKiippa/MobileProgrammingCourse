@@ -19,6 +19,9 @@ export default function Laskin() {
     let luku2 = parseInt(text2);
 
     setSumma([luku1+luku2])
+    
+    setData([...data, { key: summa }]);
+     
     };
 
     const buttonPressed2 = () => {
@@ -26,12 +29,16 @@ export default function Laskin() {
       let luku2 = parseInt(text2);
   
       setSumma([luku1-luku2])
+
+      setData([...data, { key: summa }]);
+     
+
       };
    
 
   return (
     <View style={styles.container}>
-
+      
       <Text>Result:{summa}</Text>   
       <TextInput style={{width: 200, borderColor: 'gray', borderWidth: 1}}
       keyboardType='numeric'
@@ -44,7 +51,15 @@ onChangeText={text2 => setText2(text2)} value={text2} />
   <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
       <Button onPress={buttonPressed1} title="+" />
       <Button onPress={buttonPressed2} title="-" />
+    
     </View>
+    
+      <Text>History</Text>
+
+
+      <FlatList  style={{ maxHeight: 200 }} data={data} renderItem={({item}) => <Text>{item.key}</Text>}
+	    keyExtractor={(item, index) => index.toString()} />
+     
    
       <StatusBar style="auto" />
     </View>

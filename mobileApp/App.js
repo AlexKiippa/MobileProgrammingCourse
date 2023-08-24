@@ -13,12 +13,12 @@ export default function App() {
   return (
     <View style={styles.container}>
 
-        <GuessNumber></GuessNumber>
+      <Laskin></Laskin> 
     </View>
   );
 }
 
-//<Laskin></Laskin>
+//<Laskin></Laskin>  <GuessNumber></GuessNumber>
 const styles = StyleSheet.create({
   container: {
     flex: 1,
