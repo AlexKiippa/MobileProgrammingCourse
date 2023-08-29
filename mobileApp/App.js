@@ -4,6 +4,7 @@ import {FlatList, Image, Alert, Button, StyleSheet, Text, View, TextInput } from
 
 import Laskin from './components/laskin.js'
 import GuessNumber from './components/guessNumber.js'
+import Ostoslista from './components/ostoslista.js'
 
 
 export default function App() {
@@ -13,7 +14,8 @@ export default function App() {
   return (
     <View style={styles.container}>
 
-      <Laskin></Laskin> 
+        <Ostoslista></Ostoslista>
+        
     </View>
   );
 }
