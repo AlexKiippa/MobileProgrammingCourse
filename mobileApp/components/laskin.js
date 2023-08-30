@@ -1,8 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { FlatList, Button, StyleSheet, Text, View, TextInput } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function Laskin() {
+
+
+
+export default function Laskin({ navigation }) {
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
   const [data, setData] = useState([]);
@@ -13,33 +18,20 @@ export default function Laskin() {
     let luku1 = parseInt(text1);
     let luku2 = parseInt(text2);
     let summa = luku1 + luku2;
-    setVastaus(summa)
-
-    setData([
-      ...data,
-      { key: luku1, type: 'number' },
-      { key: ' + ', type: 'operator' },
-      { key: luku2, type: 'number' },
-      { key: ' = ', type: 'operator' },
-      { key: summa.toString(), type: 'result' },
-      { key: '', type: 'empty' }, 
-    ]);
+    setVastaus(summa);
+  
+    const calculationString = `${luku1} + ${luku2} = ${summa}`;
+    setData([...data, calculationString, '']);
   };
-
+  
   const buttonPressed2 = () => {
     let luku1 = parseInt(text1);
     let luku2 = parseInt(text2);
     let summa = luku1 - luku2;
-    setVastaus(summa)
-    setData([
-      ...data,
-      { key: luku1, type: 'number' },
-      { key: ' - ', type: 'operator' },
-      { key: luku2, type: 'number' },
-      { key: ' = ', type: 'operator' },
-      { key: summa.toString(), type: 'result' },
-      { key: '', type: 'empty' }, 
-    ]);
+    setVastaus(summa);
+  
+    const calculationString = `${luku1} - ${luku2} = ${summa}`;
+    setData([...data, calculationString, '']);
   };
 
   return (
@@ -60,26 +52,10 @@ export default function Laskin() {
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Button onPress={buttonPressed1} title='+' />
         <Button onPress={buttonPressed2} title='-' />
+        <Button title="History" onPress={() => navigation.navigate('History', { historyData: data } )} />
       </View>
-      <Text>History</Text>
-      <FlatList
-  style={{ maxHeight: 200 }}
-  data={data}
-  horizontal
-  renderItem={({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text
-        style={[
-          item.type === 'result' ? styles.resultText : styles.normalText,
-          item.type === 'empty' && styles.emptyText, 
-        ]}
-      >
-        {item.key}
-      </Text>
-    </View>
-  )}
-  keyExtractor={(item, index) => index.toString()}
-/>
+      
+    
       <StatusBar style='auto' />
     </View>
   );
