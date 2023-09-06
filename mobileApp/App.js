@@ -31,9 +31,8 @@ export default function App() {
   <Stack.Screen name="History" component={History}/>
 </Stack.Navigator>
 </NavigationContainer>
-        
-
     </View>
+ 
   );
 }
 
