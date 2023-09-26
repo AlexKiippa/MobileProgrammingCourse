@@ -6,25 +6,18 @@ import {Picker} from '@react-native-picker/picker';
 export default function App() {
   const [keyword, setKeyword] = useState('');
   const [documentation, setDocumentation] = useState([]);
-  const [selectedCurrency, setSelectedCurrency] = useState('USD'); // Default currency
-  const [amount, setAmount] = useState('1'); // Default amount
+  const [selectedCurrency, setSelectedCurrency] = useState(''); 
+  const [amount, setAmount] = useState('1'); 
 
-  const fetchCurrencyData = () => {
-    fetch(`https://api.apilayer.com/exchangerates_data/convert?to=${selectedCurrency}&from=from&amount=${amount}`, {
-      method: 'GET',
-      headers: {
-        "apikey": "sqVWUfaMifRD7MwyvAAoVh5etNDfUbOZ",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Assuming the API response is an array of documentation items
-        setDocumentation(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching documentation:', error);
-      });
-  };
+
+
+  const getData = () => {
+    fetch('https://api.layer.com/exvhangerates_data/lastest',
+    { headers: { 'apikey' : 'sqVWUfaMifRD7MwyvAAoVh5etNDfUbOZ'}})
+    .then(response => response.json())
+    .then(data => setRates(data.rates))
+    .catch(err => RefreshControlBase.error(err))
+  }
 
   const handleCurrencyChange = (currency) => {
     setSelectedCurrency(currency);
@@ -33,6 +26,11 @@ export default function App() {
   const handleAmountChange = (text) => {
     setAmount(text);
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -63,11 +61,11 @@ export default function App() {
       <Picker
           selectedValue={selectedCurrency}
           style={styles.picker}
-          onValueChange={(itemValue) => handleCurrencyChange(itemValue)}
+          onValueChange={(value) => handleCurrencyChange(value)}
         >
-          <Picker.Item label="USD" value="USD" />
-          <Picker.Item label="EUR" value="EUR" />
-          {/* Add more currency options as needed */}
+          {
+          <Picker.Item key={item} label={item} value={item} />
+           }
         </Picker>
 
       <Button title="Convert" onPress={fetchCurrencyData} />

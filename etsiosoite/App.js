@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
+import * as Location from 'expo-location'; 
 
 export default function App() {
   const [address, setAddress] = useState('');
   const [coordinates, setCoordinates] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null); 
+
   MAPQUEST_API_KEY = 'xwqLQXu92yoAYZEwBfwua5FfUrqUDv8P';
+
+  useEffect(() => {
+    // Haetaan nykyinen sijainti kun sovellus avataan
+    const getCurrentLocation = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+        const locationData = await Location.getCurrentPositionAsync({});
+        setCurrentLocation(locationData.coords);
+      }
+    };
+
+    getCurrentLocation();
+  }, []);
 
   const handleShowButtonPress = async () => {
     try {
@@ -30,9 +46,21 @@ export default function App() {
         onChangeText={(text) => setAddress(text)}
       />
       <Button title="Show" onPress={handleShowButtonPress} />
-      {coordinates && (
-        <MapView style={styles.map} region={{ ...coordinates, latitudeDelta: 0.0322, longitudeDelta: 0.0221 }}>
-          <Marker coordinate={coordinates} />
+      {(coordinates || currentLocation) && (
+        <MapView
+          style={styles.map}
+          region={
+            coordinates
+              ? { ...coordinates, latitudeDelta: 0.0322, longitudeDelta: 0.0221 }
+              : {
+                  // Jos osoitetta ei ole haettu, käytetään nykyistä sijaintia
+                  ...currentLocation,
+                  latitudeDelta: 0.0322,
+                  longitudeDelta: 0.0221,
+                }
+          }>
+          {coordinates && <Marker coordinate={coordinates} />}
+          {currentLocation && <Marker coordinate={currentLocation} pinColor="blue" />}
         </MapView>
       )}
     </View>
